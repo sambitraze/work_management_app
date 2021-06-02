@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:work_management_app/views/Auth/LoginScreen.dart';
-import 'package:work_management_app/views/Services/authService.dart';
+import 'package:work_management_app/Services/authService.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);

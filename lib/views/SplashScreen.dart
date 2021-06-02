@@ -19,7 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   startTime() async {
-    var duration = new Duration(milliseconds: 15000);
+    var duration = new Duration(milliseconds: 3000);
     return new Timer(duration, navigate);
   }
 
@@ -44,7 +44,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xff314B8C),
+      backgroundColor: Colors.white,
       body: Column(
         children: [
           Expanded(
@@ -62,7 +62,7 @@ class _SplashScreenState extends State<SplashScreen> {
                   Text(
                     "IoT Lab WMS",
                     style: GoogleFonts.nunito(
-                        color: Colors.white,
+                        color: Colors.black,
                         fontSize: 48,
                         fontWeight: FontWeight.bold),
                   ),
@@ -76,7 +76,7 @@ class _SplashScreenState extends State<SplashScreen> {
               style: GoogleFonts.nunito(
                   fontSize: 16,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white),
+                  color: Colors.black),
             ),
             flex: 1,
           )
