@@ -16,7 +16,7 @@ class LandingScreen extends StatefulWidget {
 }
 
 class _LandingScreenState extends State<LandingScreen> {
-   int _selectedIndex = 0;
+  int _selectedIndex = 0;
   @override
   void initState() {
     super.initState();
@@ -40,14 +40,14 @@ class _LandingScreenState extends State<LandingScreen> {
   // MaterialButton(
   //         child: Text("Logout"),
   //         onPressed: () async{
-  //           AuthService.clearAuth();
-  //           SharedPreferences prefs = await SharedPreferences.getInstance();
-  //           prefs.setBool("login", false);
-  //           Navigator.of(context).push(
-  //             MaterialPageRoute(
-  //               builder: (context) => LoginScreen(),
-  //             ),
-  //           );
+  // AuthService.clearAuth();
+  // SharedPreferences prefs = await SharedPreferences.getInstance();
+  // prefs.setBool("login", false);
+  // Navigator.of(context).push(
+  //   MaterialPageRoute(
+  //     builder: (context) => LoginScreen(),
+  //   ),
+  // );
   //         },
   //       ),
 
@@ -63,7 +63,19 @@ class _LandingScreenState extends State<LandingScreen> {
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
-       bottomNavigationBar: Container(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          AuthService.clearAuth();
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setBool("login", false);
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => LoginScreen(),
+            ),
+          );
+        },
+      ),
+      bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: Colors.white,
           boxShadow: [
@@ -110,7 +122,6 @@ class _LandingScreenState extends State<LandingScreen> {
           ),
         ),
       ),
-      
     );
   }
 }
