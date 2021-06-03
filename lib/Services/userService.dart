@@ -6,19 +6,20 @@ import 'package:work_management_app/models/User.dart';
 import 'authService.dart';
 
 class UserService extends AuthService {
-  // // ignore: missing_return
-  // static Future<User> getUser() async {
-  //   var auth = await AuthService.getSavedAuth();
-  //   http.Response response = await AuthService.makeAuthenticatedRequest(
-  //       AuthService.BASE_URI + 'api/user/${auth['id']}',
-  //       method: 'GET');
-  //   if (response.statusCode == 200) {
-  //     User user = User.fromJson(json.decode(response.body));
-  //     return user;
-  //   } else {
-  //     print("DEBUG");
-  //   }
-  // }
+  // ignore: missing_return
+  static Future getUser() async {
+    var auth = await AuthService.getSavedAuth();
+    http.Response response = await AuthService.makeAuthenticatedRequest(
+        AuthService.BASE_URI + '/user/user/${auth['id']}',
+        method: 'GET');
+    var responseMap = json.decode(response.body);
+    if (response.statusCode == 200) {
+      User user = User.fromJson(responseMap);
+      return user;
+    } else {
+      return responseMap["message"];
+    }
+  }
 
   // // ignore: missing_return
   // static Future<User> getUserById(id) async {

@@ -66,7 +66,7 @@ class AuthService extends BaseService {
     Map<String, dynamic> responseMap = json.decode(response.body);
     if (response.statusCode == 200) {
       String token = responseMap['token'];
-      String id = responseMap['user']['user_id'].toString();
+      String id = responseMap['user']['_id'].toString();
       await _saveToken(token, email, id);
       return responseMap["message"];
     } else {
