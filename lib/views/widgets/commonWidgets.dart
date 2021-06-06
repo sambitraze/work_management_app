@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:work_management_app/models/Meeting.dart';
 import 'package:work_management_app/models/User.dart';
+import 'package:work_management_app/views/MeetingDetailScreen.dart';
 
 colorBorder(Meeting? meeting) {
   if (meeting!.start!.isBefore(DateTime.now()) &&
@@ -259,16 +260,12 @@ meetingWidget(context, Meeting? meeting) {
                         ),
                         InkWell(
                           onTap: () async {
-                            await canLaunch(meeting.meetLink.toString())
-                                ? await launch(meeting.meetLink.toString())
-                                : ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        "Invalid Meeting Link",
-                                      ),
-                                      duration: Duration(milliseconds: 800),
-                                    ),
-                                  );
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    MeetingDetailScreen(meeting: meeting),
+                              ),
+                            );
                           },
                           child: actionCard("Details", "details"),
                         ),
@@ -322,18 +319,15 @@ Widget titleWidget(BuildContext context, String label, String data) {
             fontSize: 20,
           ),
         ),
-        Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              data,
-              style: GoogleFonts.nunito(
-                color: Color(0xff141414),
-                fontWeight: FontWeight.w600,
-                fontSize: 18,
-              ),
-            )
-          ],
+        Expanded(
+          child: Text(
+            data,
+            style: GoogleFonts.nunito(
+              color: Color(0xff141414),
+              fontWeight: FontWeight.w600,
+              fontSize: 18,
+            ),
+          ),
         )
       ],
     ),
@@ -438,7 +432,7 @@ dateWidget(DateTime? date) {
 }
 
 timeWidget(DateTime? date) {
-  return "${date?.hour}:${date?.minute}";
+  return "${date?.hour.toString().padLeft(2, '0')}:${date?.minute.toString().padLeft(2, '0')}";
 }
 
 headerWidget(User user, BuildContext context) {
@@ -467,7 +461,7 @@ headerWidget(User user, BuildContext context) {
                   style: GoogleFonts.nunito(
                     color: Colors.black,
                     fontSize: 22,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
                 Text(
@@ -476,7 +470,7 @@ headerWidget(User user, BuildContext context) {
                   style: GoogleFonts.nunito(
                     color: Colors.black,
                     fontSize: 14,
-                    fontWeight: FontWeight.normal,
+                    fontWeight: FontWeight.w700,
                   ),
                 ),
               ],

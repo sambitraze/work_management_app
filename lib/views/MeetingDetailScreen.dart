@@ -21,7 +21,7 @@ class _MeetingDetailScreenState extends State<MeetingDetailScreen> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+              SizedBox(height: MediaQuery.of(context).size.height * 0.04),
               Align(
                   alignment: Alignment.center,
                   child: Text(
@@ -54,17 +54,17 @@ class _MeetingDetailScreenState extends State<MeetingDetailScreen> {
               titleWidget(
                 context,
                 "Date: ",
-                dateWidget(widget.meeting.start),
+                dateWidget(widget.meeting.start!.toLocal()),
               ),
               titleWidget(
                 context,
                 "Start: ",
-                timeWidget(widget.meeting.start),
+                timeWidget(widget.meeting.start!.toLocal()),
               ),
               titleWidget(
                 context,
                 "End: ",
-                timeWidget(widget.meeting.end),
+                timeWidget(widget.meeting.end!.toLocal()),
               ),
               titleWidget(
                 context,
@@ -74,6 +74,11 @@ class _MeetingDetailScreenState extends State<MeetingDetailScreen> {
               titleWidget(
                 context,
                 "Total Participants: ",
+                widget.meeting.attendees!.length.toString(),
+              ),
+              titleWidget(
+                context,
+                "Mom: ",
                 widget.meeting.mom.toString(),
               ),
             ],
