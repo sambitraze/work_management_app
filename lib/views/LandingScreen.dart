@@ -63,18 +63,6 @@ class _LandingScreenState extends State<LandingScreen> {
       body: Center(
         child: _widgetOptions.elementAt(_selectedIndex),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          AuthService.clearAuth();
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.setBool("login", false);
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => LoginScreen(),
-            ),
-          );
-        },
-      ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: Colors.white,
