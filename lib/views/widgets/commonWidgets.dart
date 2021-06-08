@@ -3,7 +3,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:work_management_app/models/Meeting.dart';
 import 'package:work_management_app/models/User.dart';
-import 'package:work_management_app/views/MeetingDetailScreen.dart';
+import 'package:work_management_app/views/Meeting/AttendanceScreen.dart';
+import 'package:work_management_app/views/Meeting/MeetingDetailScreen.dart';
 
 colorBorder(Meeting? meeting) {
   if (meeting!.start!.isBefore(DateTime.now()) &&
@@ -245,16 +246,13 @@ meetingWidget(context, Meeting? meeting) {
                         ),
                         InkWell(
                           onTap: () async {
-                            await canLaunch(meeting.meetLink.toString())
-                                ? await launch(meeting.meetLink.toString())
-                                : ScaffoldMessenger.of(context).showSnackBar(
-                                    SnackBar(
-                                      content: Text(
-                                        "Invalid Meeting Link",
-                                      ),
-                                      duration: Duration(milliseconds: 800),
-                                    ),
-                                  );
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => AttendanceScreen(
+                                  meeting: meeting,
+                                ),
+                              ),
+                            );
                           },
                           child: actionCard("Attendance", "attendance"),
                         ),
@@ -469,7 +467,7 @@ headerWidget(User user, BuildContext context) {
                       "(${user.department.toString()})",
                   style: GoogleFonts.nunito(
                     color: Colors.black,
-                    fontSize: 14,
+                    fontSize: 16,
                     fontWeight: FontWeight.w700,
                   ),
                 ),

@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:work_management_app/views/Auth/LoginScreen.dart';
 import 'package:work_management_app/Services/authService.dart';
 import 'package:work_management_app/views/HomeScreen.dart';
-import 'package:work_management_app/views/MeetingScreen.dart';
+import 'package:work_management_app/views/Meeting/MeetingScreen.dart';
 import 'package:work_management_app/views/MemberListScreen.dart';
 import 'package:work_management_app/views/ProfileScreen.dart';
 

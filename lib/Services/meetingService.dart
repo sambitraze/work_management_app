@@ -51,18 +51,17 @@ class MeetingService extends AuthService {
   //   }
   // }
 
-  // static Future<bool> updateUser(var payload) async {
-  //   var auth = await AuthService.getSavedAuth();
-  //   http.Response response = await AuthService.makeAuthenticatedRequest(
-  //       AuthService.BASE_URI + 'api/user/update/${auth['id']}',
-  //       method: 'PUT',
-  //       body: payload);
-  //   if (response.statusCode == 200) {
-  //     return true;
-  //   } else {
-  //     print("Debug update user");
-  //     return false;
-  //   }
-  // }
+  static Future<bool> updateMeeting(var payload) async {
+    http.Response response = await AuthService.makeAuthenticatedRequest(
+        AuthService.BASE_URI + '/meeting/update/',
+        method: 'PUT',
+        body: payload);
+    if (response.statusCode == 200) {
+      return true;
+    } else {
+      print("Debug update meeting");
+      return false;
+    }
+  }
 
 }

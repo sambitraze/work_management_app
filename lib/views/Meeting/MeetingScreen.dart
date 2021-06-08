@@ -4,6 +4,7 @@ import 'package:work_management_app/Services/meetingService.dart';
 import 'package:work_management_app/Services/userService.dart';
 import 'package:work_management_app/models/Meeting.dart';
 import 'package:work_management_app/models/User.dart';
+import 'package:work_management_app/views/Meeting/CreateMeetingScreen.dart';
 import 'package:work_management_app/views/widgets/commonWidgets.dart';
 import 'package:work_management_app/views/widgets/tokenError.dart';
 
@@ -21,7 +22,6 @@ class _MeetingScreenState extends State<MeetingScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getData();
   }
@@ -58,6 +58,17 @@ class _MeetingScreenState extends State<MeetingScreen> {
             child: CircularProgressIndicator(),
           )
         : Scaffold(
+            floatingActionButton: FloatingActionButton(
+              backgroundColor: Color(0xff314B8C),
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => CreateMeetingScreen(),
+                  ),
+                );
+              },
+              child: Icon(Icons.add,),
+            ),
             body: Container(
               height: MediaQuery.of(context).size.height,
               width: MediaQuery.of(context).size.width,
@@ -70,15 +81,15 @@ class _MeetingScreenState extends State<MeetingScreen> {
                   Align(
                     alignment: Alignment.topLeft,
                     child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                      padding: const EdgeInsets.all(16.0),
                       child: Text(
-                      "Meetings",
-                      style: GoogleFonts.nunito(
-                        color: Colors.black,
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold,
+                        "Meetings",
+                        style: GoogleFonts.nunito(
+                          color: Colors.black,
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                                    ),
                     ),
                   ),
                   Expanded(
