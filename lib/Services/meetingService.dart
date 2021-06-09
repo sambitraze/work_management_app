@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 import 'package:work_management_app/models/Meeting.dart';
+import 'package:work_management_app/views/Meeting/CreateMeetingScreen.dart';
 
 import 'authService.dart';
 
@@ -23,18 +24,20 @@ class MeetingService extends AuthService {
     }
   }
 
-  // // ignore: missing_return
-  // static Future<User> getUserById(id) async {
-  //   http.Response response = await AuthService.makeAuthenticatedRequest(
-  //       AuthService.BASE_URI + 'api/user/$id}',
-  //       method: 'GET');
-  //   if (response.statusCode == 200) {
-  //     User user = User.fromJson(json.decode(response.body));
-  //     return user;
-  //   } else {
-  //     print("DEBUG");
-  //   }
-  // }
+  // ignore: missing_return
+  static Future createMeeting(payload) async {
+    http.Response response = await AuthService.makeAuthenticatedRequest(
+        AuthService.BASE_URI + '/meeting/create',
+        method: 'POST',
+        body: payload);
+    var responseMap = jsonDecode(response.body);
+    if (response.statusCode == 200) {
+      Meeting meeting = Meeting.fromJson(responseMap);
+      return meeting;
+    } else {
+      return "error";
+    }
+  }
 
   // // ignore: missing_return
   // static Future getAllUser() async {
@@ -63,5 +66,4 @@ class MeetingService extends AuthService {
       return false;
     }
   }
-
 }

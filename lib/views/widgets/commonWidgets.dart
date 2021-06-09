@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:work_management_app/models/Meeting.dart';
@@ -476,6 +477,42 @@ headerWidget(User user, BuildContext context) {
           ],
         ),
       ),
+    ),
+  );
+}
+
+Widget formheaderWidget(BuildContext context, String text) {
+  return Text(
+    text,
+    style: GoogleFonts.nunito(
+        color: Color(0xff314B8C), fontSize: 18, fontWeight: FontWeight.bold),
+  );
+}
+
+Widget inputWidget(TextEditingController textEditingController,
+    String validation, bool, maxline, minline) {
+  return Container(
+    padding: EdgeInsets.symmetric(horizontal: 4, vertical: 4),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(12),
+      color: Color(0xff314B8C).withOpacity(0.12),
+    ),
+    child: TextFormField(
+      enabled: true,
+      obscureText: bool,
+      maxLines: maxline,
+      minLines: minline,
+      validator: (value) => value!.isEmpty ? validation : null,
+      style: TextStyle(fontSize: 16, color: Colors.black),
+      decoration: InputDecoration(
+        // suffixIcon: Icon(
+        //   Icons.list_alt,
+        //   color: Colors.black,
+        // ),
+        border: InputBorder.none,
+        contentPadding: EdgeInsets.all(20),
+      ),
+      controller: textEditingController,
     ),
   );
 }

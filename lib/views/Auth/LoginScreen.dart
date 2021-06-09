@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:work_management_app/views/Auth/SignUpScreen.dart';
 import 'package:work_management_app/views/LandingScreen.dart';
 import 'package:work_management_app/Services/authService.dart';
+import 'package:work_management_app/views/widgets/commonWidgets.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -101,12 +102,25 @@ class _LoginScreenState extends State<LoginScreen> {
               height: 32,
             ),
             formheaderWidget(context, 'Email/Username'),
-            inputWidget(emailController, "Please Enter your Email", false),
+            SizedBox(
+              height: 8,
+            ),
+            inputWidget(
+                emailController, "Please Enter your Email", false, 1, 1),
             SizedBox(
               height: 18,
             ),
             formheaderWidget(context, 'Password'),
-            inputWidget(passwordController, "Please Enter your Password", true),
+            SizedBox(
+              height: 8,
+            ),
+            inputWidget(
+              passwordController,
+              "Please Enter your Password",
+              true,
+              1,
+              1,
+            ),
             SizedBox(
               height: 40,
             ),
@@ -163,25 +177,5 @@ class _LoginScreenState extends State<LoginScreen> {
                   fontWeight: FontWeight.bold),
             ),
           );
-  }
-
-  Widget formheaderWidget(BuildContext context, String text) {
-    return Text(
-      text,
-      style: GoogleFonts.nunito(
-          color: Color(0xff314B8C), fontSize: 18, fontWeight: FontWeight.bold),
-    );
-  }
-
-  Widget inputWidget(
-      TextEditingController textEditingController, String validation, bool) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-      child: TextFormField(
-        controller: textEditingController,
-        obscureText: bool,
-        validator: (value) => value!.isEmpty ? validation : null,
-      ),
-    );
   }
 }

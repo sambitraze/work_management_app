@@ -31,7 +31,6 @@ class _AttendanceScreenState extends State<AttendanceScreen> {
       loading = true;
     });
     userList = await UserService.getAllUser();
-    print(userList.length);
     setState(() {
       loading = false;
     });
