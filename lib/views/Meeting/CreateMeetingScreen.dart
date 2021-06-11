@@ -8,7 +8,8 @@ import 'package:work_management_app/models/User.dart';
 import 'package:work_management_app/views/widgets/commonWidgets.dart';
 
 class CreateMeetingScreen extends StatefulWidget {
-  const CreateMeetingScreen({Key? key}) : super(key: key);
+  final User user;
+  const CreateMeetingScreen({required this.user});
 
   @override
   _CreateMeetingScreenState createState() => _CreateMeetingScreenState();
@@ -212,7 +213,19 @@ class _CreateMeetingScreenState extends State<CreateMeetingScreen> {
                     if (attendees.length == 0) {
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text("Please Add atleast 1 Participant")));
-                    } else {}
+                    } else {
+                      var payload = {
+                        "topic": topicController.text,
+                        "desc": descController.text,
+                        "date": startController.text.split(" ")[0],
+                        "start": startController2.text,
+                        "end": endController2.text,
+                        "createdBy": widget.user.id,
+                        "meetLink": "",
+                        "attendees": List<dynamic>.from(
+                            attendees.map((x) => x.toJson())),
+                      };
+                    }
                     MeetingService.createMeeting("payload");
                   },
                 ),

@@ -63,7 +63,7 @@ class _MeetingScreenState extends State<MeetingScreen> {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => CreateMeetingScreen(),
+                    builder: (context) => CreateMeetingScreen(user: user,),
                   ),
                 );
               },
