@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -5,7 +7,9 @@ import 'package:work_management_app/Services/meetingService.dart';
 import 'package:work_management_app/Services/userService.dart';
 import 'package:work_management_app/models/Meeting.dart';
 import 'package:work_management_app/models/User.dart';
+import 'package:work_management_app/views/LandingScreen.dart';
 import 'package:work_management_app/views/widgets/commonWidgets.dart';
+import 'package:http/http.dart' as http;
 
 class CreateMeetingScreen extends StatefulWidget {
   final User user;
@@ -26,6 +30,7 @@ class _CreateMeetingScreenState extends State<CreateMeetingScreen> {
   TextEditingController endController = TextEditingController();
   TextEditingController startController2 = TextEditingController();
   TextEditingController endController2 = TextEditingController();
+  TextEditingController meetLinKController = TextEditingController();
 
   @override
   void initState() {
@@ -43,14 +48,27 @@ class _CreateMeetingScreenState extends State<CreateMeetingScreen> {
     });
   }
 
+  bool submitLoader = false;
+
+  checkFields() {
+    if (topicController.text.length > 0 &&
+        descController.text.length > 0 &&
+        startController2.text.length > 0 &&
+        endController2.text.length > 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  late http.Response response;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,7 +82,7 @@ class _CreateMeetingScreenState extends State<CreateMeetingScreen> {
                   children: [
                     Image.asset(
                       "assets/images/meet.png",
-                      height: 75,
+                      height: 60,
                     ),
                     SizedBox(
                       width: 16,
@@ -108,6 +126,25 @@ class _CreateMeetingScreenState extends State<CreateMeetingScreen> {
               SizedBox(
                 height: 16,
               ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  formheaderWidget(context, "Enter Google Meet"),
+                  Text(
+                    "(Leave empty for auto generation)",
+                    style: GoogleFonts.nunito(fontSize: 14),
+                  )
+                ],
+              ),
+              SizedBox(
+                height: 8,
+              ),
+              inputWidget(
+                  meetLinKController, "Please Enter Meet Url", false, 100, 1),
+              SizedBox(
+                height: 16,
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -147,6 +184,7 @@ class _CreateMeetingScreenState extends State<CreateMeetingScreen> {
                                       ),
                                     );
                                   });
+                                  print(attendees.length);
                                   Navigator.of(context).pop();
                                 },
                               ),
@@ -158,36 +196,38 @@ class _CreateMeetingScreenState extends State<CreateMeetingScreen> {
                   )
                 ],
               ),
-              Expanded(
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: attendees.length,
-                  padding: EdgeInsets.all(0),
-                  itemBuilder: (context, index) {
-                    print(attendees.length);
-                    return ListTile(
-                      title: Text(
-                        attendees[index].user!.name.toString(),
-                      ),
-                      subtitle: Text(
-                        attendees[index].user!.desgination.toString() +
-                            " (" +
-                            attendees[index].user!.department.toString() +
-                            ")",
-                      ),
-                      trailing: Icon(
-                        Icons.delete,
-                        color: Colors.black,
-                      ),
-                      onTap: () {
-                        setState(() {
-                          attendees.removeWhere((element) =>
-                              element.user!.id == attendees[index].user!.id);
-                        });
-                      },
-                    );
-                  },
-                ),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: attendees.length,
+                padding: EdgeInsets.all(0),
+                itemBuilder: (context, index) {
+                  print(attendees.length);
+                  return ListTile(
+                    title: Text(
+                      attendees[index].user!.name.toString(),
+                    ),
+                    subtitle: Text(
+                      attendees[index].user!.desgination.toString() +
+                          " (" +
+                          attendees[index].user!.department.toString() +
+                          ")",
+                    ),
+                    trailing: Icon(
+                      Icons.delete,
+                      color: Colors.black,
+                    ),
+                    onTap: () {
+                      setState(() {
+                        attendees.removeWhere((element) =>
+                            element.user!.id == attendees[index].user!.id);
+                      });
+                    },
+                  );
+                },
+              ),
+              SizedBox(
+                height: 16,
               ),
               Align(
                 alignment: Alignment.center,
@@ -209,24 +249,86 @@ class _CreateMeetingScreenState extends State<CreateMeetingScreen> {
                     ),
                   ),
                   color: Color(0xff314B8C),
-                  onPressed: () {
+                  onPressed: () async {
                     if (attendees.length == 0) {
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text("Please Add atleast 1 Participant")));
                     } else {
-                      var payload = {
-                        "topic": topicController.text,
-                        "desc": descController.text,
-                        "date": startController.text.split(" ")[0],
-                        "start": startController2.text,
-                        "end": endController2.text,
-                        "createdBy": widget.user.id,
-                        "meetLink": "",
-                        "attendees": List<dynamic>.from(
-                            attendees.map((x) => x.toJson())),
-                      };
+                      if (checkFields()) {
+                        if (meetLinKController.text.length == 0) {
+                          var payload2 = {
+                            "topic": topicController.text,
+                            "type": 2,
+                            "start_time": startController2.text,
+                            "duration": 40,
+                            "timezone": "Asia/Kolkata",
+                            "agenda": descController.text,
+                            "settings": {
+                              "join_before_host": true,
+                              "mute_upon_entry": true,
+                              "approval_type": 0,
+                              "waiting_room": false
+                            }
+                          };
+                          var res =
+                              await MeetingService.createMeetLink(payload2);
+                          if (res != false) {
+                            print("api");
+                            var payload = {
+                              "topic": topicController.text,
+                              "desc": descController.text,
+                              "date": startController.text.split(" ")[0],
+                              "start": startController2.text,
+                              "end": endController2.text,
+                              "createdBy": widget.user.id,
+                              "meetLink": res,
+                              "attendees": List<dynamic>.from(
+                                  attendees.map((x) => x.toJson())),
+                            };
+                            bool response = await MeetingService.createMeeting(
+                                jsonEncode(payload));
+                            if (response) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text("Meeting created")));
+                              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>LandingScreen()));
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      content:
+                                          Text("meeting creation failed")));
+                            }
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text("Meeting Link Creation faield")));
+                          }
+                        } else {
+                          var payload = {
+                            "topic": topicController.text,
+                            "desc": descController.text,
+                            "date": startController.text.split(" ")[0],
+                            "start": startController2.text,
+                            "end": endController2.text,
+                            "createdBy": widget.user.id,
+                            "meetLink": meetLinKController.text,
+                            "attendees": List<dynamic>.from(
+                                attendees.map((x) => x.toJson())),
+                          };
+                          bool response = await MeetingService.createMeeting(
+                              jsonEncode(payload));
+                          if (response) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text("Meeting created")));
+                              Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context)=>LandingScreen()));
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                content: Text("meeting creation failed")));
+                          }
+                        }
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text("Check All Field")));
+                      }
                     }
-                    MeetingService.createMeeting("payload");
                   },
                 ),
               ),
@@ -267,17 +369,19 @@ class _CreateMeetingScreenState extends State<CreateMeetingScreen> {
                       context,
                       showTitleActions: true,
                       onChanged: (date) {
+                        DateTime date1 = date.toUtc();
                         setState(() {
                           controller.text =
                               '${date.day.toString().padLeft(2, "0")}/${date.month.toString().padLeft(2, "0")}/${date.year}    ${date.hour.toString().padLeft(2, "0")}:${date.minute.toString().padLeft(2, "0")}';
-                          controller2.text = date.toString();
+                          controller2.text = date1.toString();
                         });
                       },
                       onConfirm: (date) {
+                        DateTime date1 = date.toUtc();
                         setState(() {
                           controller.text =
                               '${date.day.toString().padLeft(2, "0")}/${date.month.toString().padLeft(2, "0")}/${date.year}    ${date.hour.toString().padLeft(2, "0")}:${date.minute.toString().padLeft(2, "0")}';
-                          controller2.text = date.toString();
+                          controller2.text = date1.toString();
                         });
                       },
                       currentTime: DateTime.now(),

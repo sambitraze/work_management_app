@@ -7,6 +7,12 @@ class BaseService {
     "Content-Type": "application/json"
   };
 
+  static Future getAppCurrentVersion() async {
+    http.Response response =
+        await http.get(Uri.parse("https://wmsbackend.herokuapp.com/version"));
+    return response.body;
+  }
+
   // ignore: missing_return
   static Future makeUnauthenticatedRequest(String url,
       {String method = 'POST',

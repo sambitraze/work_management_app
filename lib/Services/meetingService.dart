@@ -30,29 +30,33 @@ class MeetingService extends AuthService {
         AuthService.BASE_URI + '/meeting/create',
         method: 'POST',
         body: payload);
-    var responseMap = jsonDecode(response.body);
+    // var responseMap = jsonDecode(response.body);
     if (response.statusCode == 200) {
-      Meeting meeting = Meeting.fromJson(responseMap);
-      return meeting;
+      // Meeting meeting = Meeting.fromJson(responseMap);
+      return true;
     } else {
-      return "error";
+      return false;
     }
   }
 
-  // // ignore: missing_return
-  // static Future getAllUser() async {
-  //   http.Response response = await AuthService.makeAuthenticatedRequest(
-  //       AuthService.BASE_URI + '/user/',
-  //       method: 'GET');
-  //   var responseMap = json.decode(response.body);
-  //   if (response.statusCode == 200) {
-  //     List<User> users =
-  //         responseMap.map<User>((usersMap) => User.fromJson(usersMap)).toList();
-  //     return users;
-  //   } else {
-  //     return responseMap["message"];
-  //   }
-  // }
+  static Future createMeetLink(var payload) async {
+    http.Response response = await http.post(
+      Uri.parse("https://api.zoom.us/v2/users/wms@iotkiit.in/meetings"),
+      body: jsonEncode(payload),
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization":
+            "Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOm51bGwsImlzcyI6IlFrOVlzZk5PUzdhNXZBMzJNWjI2bkEiLCJleHAiOjE3NjcyMDU1MDAsImlhdCI6MTYyNDIxMTQyMn0.uER7Cz8DeZ2uEV2DGFSVITu82E8NuI8vCCVkksqlyhY"
+      },
+    );
+      print(response.body);
+    if (response.statusCode == 201) {
+      var responseMap = jsonDecode(response.body);
+      return responseMap["join_url"];
+    } else {
+      return false;
+    }
+  }
 
   static Future<bool> updateMeeting(var payload) async {
     http.Response response = await AuthService.makeAuthenticatedRequest(

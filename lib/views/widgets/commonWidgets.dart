@@ -401,7 +401,7 @@ inProgress() {
   return Container(
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(36),
-      color: Colors.purple.shade300,
+      color: Colors.purple.shade200,
     ),
     child: Padding(
       padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
@@ -513,6 +513,29 @@ Widget inputWidget(TextEditingController textEditingController,
         contentPadding: EdgeInsets.all(20),
       ),
       controller: textEditingController,
+    ),
+  );
+}
+
+versionErrorWiget(BuildContext context,String uri) {
+  return showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (context) => AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      content: Text("Please update the app!!!"),
+      actions: [
+        MaterialButton(
+          child: Text("Update"),
+          onPressed: () async {
+            if (await canLaunch(uri)) {
+              await launch(uri);
+            } else {
+              throw 'Could not launch $uri';
+            }
+          },
+        ),
+      ],
     ),
   );
 }

@@ -1,7 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.work_management_app">
+    package="in.iotkiit.work_management_app">
+    <uses-permission android:name="android.permission.INTERNET" />
    <application
-        android:label="work_management_app"
+        android:label="WMS IoT Lab"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
