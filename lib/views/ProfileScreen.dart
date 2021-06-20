@@ -22,7 +22,7 @@ class ProfileScreen extends StatefulWidget {
 class _ProfileScreenState extends State<ProfileScreen> {
   late User user;
   bool loading = false;
-  //TODO: Update this ad wellas backend
+  //TODO: Update this ad well as backend
   String version = "1.0.0+1";
 
   @override
@@ -99,7 +99,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   height: 130,
                                   width: 130,
                                   fit: BoxFit.cover,
-                                  placeholder: "assets/loader.gif",
+                                  placeholder: "assets/images/loader.gif",
                                   image: user.photoUrl.toString(),
                                   imageErrorBuilder:
                                       (context, exception, stackTrace) {

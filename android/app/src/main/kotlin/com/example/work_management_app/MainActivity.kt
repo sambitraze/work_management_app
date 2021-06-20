@@ -1,4 +1,4 @@
-package com.example.work_management_app
+package com.iotkiit.work_management_app
 
 import io.flutter.embedding.android.FlutterActivity
 
