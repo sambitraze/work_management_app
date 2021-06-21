@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:work_management_app/Services/baseService.dart';
 import 'package:work_management_app/models/User.dart';
 
 import 'authService.dart';
@@ -10,7 +11,7 @@ class UserService extends AuthService {
   static Future getUser() async {
     var auth = await AuthService.getSavedAuth();
     http.Response response = await AuthService.makeAuthenticatedRequest(
-        AuthService.BASE_URI + '/user/user/${auth['id']}',
+        BaseService.BASE_URI + '/user/user/${auth['id']}',
         method: 'GET');
     var responseMap = json.decode(response.body);
     if (response.statusCode == 200) {
@@ -37,7 +38,7 @@ class UserService extends AuthService {
   // // ignore: missing_return
   static Future getAllUser() async {
     http.Response response = await AuthService.makeAuthenticatedRequest(
-        AuthService.BASE_URI + '/user/',
+        BaseService.BASE_URI + '/user/',
         method: 'GET');
     var responseMap = json.decode(response.body);
     if (response.statusCode == 200) {
@@ -65,7 +66,7 @@ class UserService extends AuthService {
 
   static Future getUserCount() async {
     http.Response response = await AuthService.makeAuthenticatedRequest(
-        AuthService.BASE_URI + '/user/count',
+        BaseService.BASE_URI + '/user/count',
         method: 'GET');
 
     var responseMap = jsonDecode(response.body);

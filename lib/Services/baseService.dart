@@ -1,15 +1,18 @@
 import 'package:http/http.dart' as http;
 
 class BaseService {
-  static const BASE_URI = "https://wmsbackend.herokuapp.com/api";
+  // static const BASE_URI = "https://wmsbackend.herokuapp.com/api";
+  static const BASE_URI = "http://20.51.215.65:3000/api";
 
   static final Map<String, String> headers = {
     "Content-Type": "application/json"
   };
 
   static Future getAppCurrentVersion() async {
+    // http.Response response =
+    //     await http.get(Uri.parse("https://wmsbackend.herokuapp.com/version"));
     http.Response response =
-        await http.get(Uri.parse("https://wmsbackend.herokuapp.com/version"));
+        await http.get(Uri.parse("http://20.51.215.65:3000/version"));
     return response.body;
   }
 

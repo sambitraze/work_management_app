@@ -1,12 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:work_management_app/views/widgets/tokenError.dart';
 
 import 'baseService.dart';
 
 class AuthService extends BaseService {
-  static const BASE_URI = "https://wmsbackend.herokuapp.com/api";
+  // static const BASE_URI = "https://wmsbackend.herokuapp.com/api";
   static const String authNamespace = "auth";
   // ignore: missing_return
   static Future makeAuthenticatedRequest(String url,
@@ -44,6 +46,26 @@ class AuthService extends BaseService {
       }
     } catch (err) {
       print(err);
+    }
+  }
+
+  static Future checkToken(context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    Map<String, dynamic> auth = json.decode(prefs.getString("auth").toString());
+    try {
+      // Verify a token
+      final jwt = JWT.verify(auth['token'], SecretKey('wmsiotlabdl5'));
+      print("Expires at " +
+          DateTime.fromMillisecondsSinceEpoch(jwt.payload['exp'] * 1000,
+                  isUtc: true)
+              .toLocal()
+              .toString());
+    } on JWTExpiredError {
+      tokenErrorWiget(context);
+      print('jwt expired');
+    } on JWTError catch (ex) {
+      print(ex.message);
+      tokenErrorWiget(context);
     }
   }
 

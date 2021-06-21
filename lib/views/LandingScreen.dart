@@ -21,6 +21,7 @@ class _LandingScreenState extends State<LandingScreen> {
   @override
   void initState() {
     super.initState();
+    getData();
     // ReminderService reminderService;
     // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
     //   showDialog(
@@ -38,6 +39,7 @@ class _LandingScreenState extends State<LandingScreen> {
     // });
     // _selectedIndex = widget.selectedIndex;
   }
+
   // MaterialButton(
   //         child: Text("Logout"),
   //         onPressed: () async{
@@ -51,6 +53,16 @@ class _LandingScreenState extends State<LandingScreen> {
   // );
   //         },
   //       ),
+  bool loading = false;
+  getData() async {
+    setState(() {
+      loading = true;
+    });
+    await AuthService.checkToken(context);
+    setState(() {
+      loading = false;
+    });
+  }
 
   List<Widget> _widgetOptions = <Widget>[
     MeetingScreen(),
@@ -60,63 +72,68 @@ class _LandingScreenState extends State<LandingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: DoubleBackToCloseApp(
-        snackBar: const SnackBar(
-            content: Text('Tap back again to leave'),
-            duration: Duration(milliseconds: 800),
-          ),
-        child: Center(
-          child: _widgetOptions.elementAt(_selectedIndex),
-        ),
-      ),
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 20,
-              color: Colors.black.withOpacity(.1),
-            )
-          ],
-        ),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
-            child: GNav(
-              rippleColor: Color(0xff314B8C),
-              hoverColor: Color(0xff314B8C),
-              gap: 8,
-              activeColor: Colors.white,
-              iconSize: 24,
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-              duration: Duration(milliseconds: 200),
-              tabBackgroundColor: Color(0xff314B8C),
-              color: Colors.black,
-              tabs: [
-                GButton(
-                  icon: Icons.house_outlined,
-                  text: 'Home',
-                ),
-                GButton(
-                  icon: Icons.person_search,
-                  text: 'Users',
-                ),
-                GButton(
-                  icon: Icons.person,
-                  text: 'Settings',
-                ),
-              ],
-              selectedIndex: _selectedIndex,
-              onTabChange: (index) {
-                setState(() {
-                  _selectedIndex = index;
-                });
-              },
+    return loading
+        ? Center(
+            child: CircularProgressIndicator(),
+          )
+        : Scaffold(
+            body: DoubleBackToCloseApp(
+              snackBar: const SnackBar(
+                content: Text('Tap back again to leave'),
+                duration: Duration(milliseconds: 800),
+              ),
+              child: Center(
+                child: _widgetOptions.elementAt(_selectedIndex),
+              ),
             ),
-          ),
-        ),
-      ),
-    );
+            bottomNavigationBar: Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                boxShadow: [
+                  BoxShadow(
+                    blurRadius: 20,
+                    color: Colors.black.withOpacity(.1),
+                  )
+                ],
+              ),
+              child: SafeArea(
+                child: Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 15.0, vertical: 8),
+                  child: GNav(
+                    rippleColor: Color(0xff314B8C),
+                    hoverColor: Color(0xff314B8C),
+                    gap: 8,
+                    activeColor: Colors.white,
+                    iconSize: 24,
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    duration: Duration(milliseconds: 200),
+                    tabBackgroundColor: Color(0xff314B8C),
+                    color: Colors.black,
+                    tabs: [
+                      GButton(
+                        icon: Icons.house_outlined,
+                        text: 'Home',
+                      ),
+                      GButton(
+                        icon: Icons.person_search,
+                        text: 'Users',
+                      ),
+                      GButton(
+                        icon: Icons.person,
+                        text: 'Settings',
+                      ),
+                    ],
+                    selectedIndex: _selectedIndex,
+                    onTabChange: (index) {
+                      setState(() {
+                        _selectedIndex = index;
+                      });
+                    },
+                  ),
+                ),
+              ),
+            ),
+          );
   }
 }

@@ -6,7 +6,6 @@ import 'package:work_management_app/models/Meeting.dart';
 import 'package:work_management_app/models/User.dart';
 import 'package:work_management_app/views/Meeting/CreateMeetingScreen.dart';
 import 'package:work_management_app/views/widgets/commonWidgets.dart';
-import 'package:work_management_app/views/widgets/tokenError.dart';
 
 class MeetingScreen extends StatefulWidget {
   const MeetingScreen({Key? key}) : super(key: key);
@@ -30,25 +29,11 @@ class _MeetingScreenState extends State<MeetingScreen> {
     setState(() {
       loading = true;
     });
-    dynamic result = await UserService.getUser();
-    dynamic result2 = await MeetingService.getAllMeeting();
-    if (result == "Your session is expired please login again" ||
-        result == "No user was found in DB") {
-      tokenErrorWiget(context);
-    } else {
-      setState(() {
-        user = result;
-      });
-    }
-    if (result2 == "Your session is expired please login again" ||
-        result2 == "No meetings are foundB") {
-      tokenErrorWiget(context);
-    } else {
-      setState(() {
-        meetings = result2;
-        loading = false;
-      });
-    }
+    user = await UserService.getUser();
+    meetings = await MeetingService.getAllMeeting();
+    setState(() {
+      loading = false;
+    });
   }
 
   @override
@@ -63,11 +48,15 @@ class _MeetingScreenState extends State<MeetingScreen> {
               onPressed: () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => CreateMeetingScreen(user: user,),
+                    builder: (context) => CreateMeetingScreen(
+                      user: user,
+                    ),
                   ),
                 );
               },
-              child: Icon(Icons.add,),
+              child: Icon(
+                Icons.add,
+              ),
             ),
             body: Container(
               height: MediaQuery.of(context).size.height,

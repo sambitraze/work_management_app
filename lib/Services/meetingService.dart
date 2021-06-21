@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
+import 'package:work_management_app/Services/baseService.dart';
 import 'package:work_management_app/models/Meeting.dart';
 import 'package:work_management_app/views/Meeting/CreateMeetingScreen.dart';
 
@@ -10,7 +11,7 @@ class MeetingService extends AuthService {
   // ignore: missing_return
   static Future getAllMeeting() async {
     http.Response response = await AuthService.makeAuthenticatedRequest(
-        AuthService.BASE_URI + '/meeting/',
+        BaseService.BASE_URI + '/meeting/',
         method: 'GET');
     var responseMap = json.decode(response.body);
     if (response.statusCode == 200) {
@@ -27,7 +28,7 @@ class MeetingService extends AuthService {
   // ignore: missing_return
   static Future createMeeting(payload) async {
     http.Response response = await AuthService.makeAuthenticatedRequest(
-        AuthService.BASE_URI + '/meeting/create',
+        BaseService.BASE_URI + '/meeting/create',
         method: 'POST',
         body: payload);
     // var responseMap = jsonDecode(response.body);
@@ -60,7 +61,7 @@ class MeetingService extends AuthService {
 
   static Future<bool> updateMeeting(var payload) async {
     http.Response response = await AuthService.makeAuthenticatedRequest(
-        AuthService.BASE_URI + '/meeting/update/',
+        BaseService.BASE_URI + '/meeting/update/',
         method: 'PUT',
         body: payload);
     if (response.statusCode == 200) {

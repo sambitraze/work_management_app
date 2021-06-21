@@ -221,6 +221,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
                 MaterialButton(onPressed: logout, child: Text("Logout")),
+                MaterialButton(
+                    onPressed: () async {
+                      await AuthService.checkToken(context);
+                    },
+                    child: Text("check Token")),
                 Text("v " + version)
               ],
             ),
