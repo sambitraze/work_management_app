@@ -58,7 +58,6 @@ class AuthService extends BaseService {
       print("Expires at " +
           DateTime.fromMillisecondsSinceEpoch(jwt.payload['exp'] * 1000,
                   isUtc: true)
-              .toLocal()
               .toString());
     } on JWTExpiredError {
       tokenErrorWiget(context);
@@ -76,7 +75,7 @@ class AuthService extends BaseService {
     return auth;
   }
 
-  static Future authenticate(String email, String password) async {
+  static Future authenticate(String email, String password,) async {
     var payload = json.encode({
       'email': email,
       'password': password,
@@ -101,6 +100,8 @@ class AuthService extends BaseService {
       'name': name,
       'email': email,
       'password': password,
+      'isVerified': true,
+      'blocked': false,
     });
     http.Response response = await BaseService.makeUnauthenticatedRequest(
         BaseService.BASE_URI + '/auth/signup',

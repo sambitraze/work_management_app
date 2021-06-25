@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:work_management_app/views/Auth/LoginScreen.dart';
 import 'package:work_management_app/Services/authService.dart';
+import 'package:work_management_app/views/Auth/addDataScreen.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -23,24 +25,31 @@ class _SignUpScreenState extends State<SignUpScreen> {
     setState(() {
       loading = true;
     });
+    SharedPreferences prefs = await SharedPreferences.getInstance();
     String msg = await AuthService.register(
         nameController.text, emailController.text, passwordController.text);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(msg),
+        duration: Duration(milliseconds: 800),
       ),
     );
     if (msg == "Sign up successfull") {
-      ScaffoldMessenger.of(context).showSnackBar(
+      String msg = await AuthService.authenticate(
+          emailController.text, passwordController.text);
+      if (msg == "Sign in successfull") {
+        prefs.setBool("login", true);
+        Navigator.of(context).pushReplacement(
+          MaterialPageRoute(
+            builder: (context) => AddDataScreen(),
+          ),
+        );
+      } else {
         SnackBar(
-          content: Text("Now You can sign in"),
-        ),
-      );
-      Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => LoginScreen(),
-        ),
-      );
+          content: Text("error signing in"),
+          duration: Duration(milliseconds: 800),
+        );
+      }
     }
     setState(() {
       loading = false;
@@ -84,62 +93,64 @@ class _SignUpScreenState extends State<SignUpScreen> {
     return Container(
       child: Form(
           key: formkey,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Sign Up",
-                style: GoogleFonts.nunito(
-                    color: Colors.black,
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold),
-              ),
-              SizedBox(
-                height: 32,
-              ),
-              formheaderWidget(context, 'Name'),
-              inputWidget(nameController, "Please Enter your Name", false),
-              SizedBox(
-                height: 18,
-              ),
-              formheaderWidget(context, 'Email'),
-              inputWidget(emailController, "Please Enter your Email", false),
-              SizedBox(
-                height: 18,
-              ),
-              formheaderWidget(context, 'Password'),
-              inputWidget(
-                  passwordController, "Please Enter your Password", true),
-              SizedBox(
-                height: 40,
-              ),
-              buttonWidget(
-                context,
-              ),
-              Align(
-                alignment: Alignment.topCenter,
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: InkWell(
-                    onTap: () {
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) => LoginScreen(),
-                        ),
-                      );
-                    },
-                    child: Text(
-                      "Already have an account ? Sign In",
-                      style: GoogleFonts.nunito(
-                          color: Colors.black,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Sign Up",
+                  style: GoogleFonts.nunito(
+                      color: Colors.black,
+                      fontSize: 32,
+                      fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: 32,
+                ),
+                formheaderWidget(context, 'Name'),
+                inputWidget(nameController, "Please Enter your Name", false),
+                SizedBox(
+                  height: 18,
+                ),
+                formheaderWidget(context, 'Email'),
+                inputWidget(emailController, "Please Enter your Email", false),
+                SizedBox(
+                  height: 18,
+                ),
+                formheaderWidget(context, 'Password'),
+                inputWidget(
+                    passwordController, "Please Enter your Password", true),
+                SizedBox(
+                  height: 40,
+                ),
+                buttonWidget(
+                  context,
+                ),
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: InkWell(
+                      onTap: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => LoginScreen(),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        "Already have an account ? Sign In",
+                        style: GoogleFonts.nunito(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold),
+                      ),
                     ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           )),
     );
   }

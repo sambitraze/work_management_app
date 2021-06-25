@@ -2,8 +2,12 @@ import 'package:double_back_to_close_app/double_back_to_close_app.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:work_management_app/Services/userService.dart';
+import 'package:work_management_app/models/User.dart';
 import 'package:work_management_app/views/Auth/LoginScreen.dart';
 import 'package:work_management_app/Services/authService.dart';
+import 'package:work_management_app/views/Auth/addDataScreen.dart';
+import 'package:work_management_app/views/Feedback/feedbackScreen.dart';
 import 'package:work_management_app/views/HomeScreen.dart';
 import 'package:work_management_app/views/Meeting/MeetingScreen.dart';
 import 'package:work_management_app/views/MemberListScreen.dart';
@@ -40,25 +44,21 @@ class _LandingScreenState extends State<LandingScreen> {
     // _selectedIndex = widget.selectedIndex;
   }
 
-  // MaterialButton(
-  //         child: Text("Logout"),
-  //         onPressed: () async{
-  // AuthService.clearAuth();
-  // SharedPreferences prefs = await SharedPreferences.getInstance();
-  // prefs.setBool("login", false);
-  // Navigator.of(context).push(
-  //   MaterialPageRoute(
-  //     builder: (context) => LoginScreen(),
-  //   ),
-  // );
-  //         },
-  //       ),
   bool loading = false;
+  late User user;
   getData() async {
     setState(() {
       loading = true;
     });
     await AuthService.checkToken(context);
+    user = await UserService.getUser();
+    if (user.phone == null) {
+      Navigator.of(context).pushReplacement(
+        MaterialPageRoute(
+          builder: (context) => AddDataScreen(),
+        ),
+      );
+    }
     setState(() {
       loading = false;
     });
@@ -66,6 +66,7 @@ class _LandingScreenState extends State<LandingScreen> {
 
   List<Widget> _widgetOptions = <Widget>[
     MeetingScreen(),
+    FeedBackScreen(),
     MemeberListScreen(),
     ProfileScreen()
   ];
@@ -114,6 +115,10 @@ class _LandingScreenState extends State<LandingScreen> {
                       GButton(
                         icon: Icons.house_outlined,
                         text: 'Home',
+                      ),
+                      GButton(
+                        icon: Icons.feedback,
+                        text: 'Feedback',
                       ),
                       GButton(
                         icon: Icons.person_search,
